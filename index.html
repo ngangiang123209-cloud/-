@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔑 DeepBehavior 激活码生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(22, 33, 62, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #e94560;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #8892b0;
+            font-size: 14px;
+        }
+        
+        .warning {
+            background: rgba(233, 69, 96, 0.15);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .warning p {
+            color: #e94560;
+            font-size: 12px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: #ccd6f6;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .input-group .hint {
+            color: #8892b0;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            gap: 10px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            background: #0a0a14;
+            border: 2px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 15px;
+            color: #00ff88;
+            font-size: 16px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+        
+        input[type="text"]::placeholder {
+            color: #4a4a6a;
+        }
+        
+        .btn {
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #c73e54;
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        
+        .btn-copy {
+            background: #2a2a4a;
+            padding: 15px 20px;
+        }
+        
+        .btn-copy:hover {
+            background: #3a3a5a;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #2a2a4a, transparent);
+            margin: 25px 0;
+        }
+        
+        .result-group {
+            margin-bottom: 20px;
+        }
+        
+        .result-group label {
+            display: block;
+            color: #ccd6f6;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .result-box {
+            background: #0a0a14;
+            border: 2px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-box .code {
+            flex: 1;
+            color: #ffcc00;
+            font-size: 15px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            word-break: break-all;
+            min-height: 24px;
+        }
+        
+        .result-box .code.empty {
+            color: #4a4a6a;
+        }
+        
+        .success-message {
+            display: none;
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .success-message p {
+            color: #00ff88;
+            font-size: 14px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #2a2a4a;
+        }
+        
+        .footer p {
+            color: #5a5a7a;
+            font-size: 12px;
+        }
+        
+        /* 复制成功提示 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #00ff88;
+            color: #0a0a14;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            input[type="text"] {
+                font-size: 14px;
+                padding: 12px;
+            }
+            
+            .result-box .code {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast">✓ 已复制到剪贴板</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🔑 激活码生成器</h1>
+            <p>DeepBehavior 行为学分析系统</p>
+        </div>
+        
+        <div class="warning">
+            <p>⚠️ 仅供软件作者使用，请勿分享此页面</p>
+        </div>
+        
+        <div class="input-group">
+            <label>输入用户机器码</label>
+            <p class="hint">粘贴用户发送给您的机器码</p>
+            <div class="input-wrapper">
+                <input type="text" id="machineCode" placeholder="XXXX-XXXX-XXXX-XXXX">
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="generateCode()">
+            ⚡ 生成激活码
+        </button>
+        
+        <div class="divider"></div>
+        
+        <div class="result-group">
+            <label>生成的激活码</label>
+            <div class="result-box">
+                <span class="code empty" id="activationCode">等待生成...</span>
+                <button class="btn btn-copy" onclick="copyCode()" id="copyBtn" disabled>
+                    📋
+                </button>
+            </div>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            <p>✅ 激活码生成成功！请将激活码发送给用户</p>
+        </div>
+        
+        <div class="footer">
+            <p>DeepBehavior KeyGen v1.0</p>
+        </div>
+    </div>
+
+    <script>
+        // SHA-256 哈希函数 (纯 JavaScript 实现)
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+        
+        // 密钥 (必须与 Python 版本一致)
+        const SECRET_KEY = "DeepBehavior_OFT_2024_SecretKey";
+        
+        // 生成激活码
+        async function generateActivationCode(machineCode) {
+            // 移除机器码中的分隔符
+            const cleanCode = machineCode.replace(/-/g, '');
+            
+            // 与密钥组合
+            const combined = `${cleanCode}-${SECRET_KEY}-ACTIVATED`;
+            
+            // 生成哈希
+            const hashHex = await sha256(combined);
+            
+            // 格式化为激活码 (5组，每组5个字符)
+            const activationCode = [
+                hashHex.substring(0, 5).toUpperCase(),
+                hashHex.substring(5, 10).toUpperCase(),
+                hashHex.substring(10, 15).toUpperCase(),
+                hashHex.substring(15, 20).toUpperCase(),
+                hashHex.substring(20, 25).toUpperCase()
+            ].join('-');
+            
+            return activationCode;
+        }
+        
+        // 生成按钮点击
+        async function generateCode() {
+            const machineCodeInput = document.getElementById('machineCode');
+            const activationCodeSpan = document.getElementById('activationCode');
+            const copyBtn = document.getElementById('copyBtn');
+            const successMessage = document.getElementById('successMessage');
+            
+            const machineCode = machineCodeInput.value.trim();
+            
+            if (!machineCode) {
+                alert('请输入机器码');
+                machineCodeInput.focus();
+                return;
+            }
+            
+            try {
+                const activationCode = await generateActivationCode(machineCode);
+                
+                activationCodeSpan.textContent = activationCode;
+                activationCodeSpan.classList.remove('empty');
+                copyBtn.disabled = false;
+                successMessage.classList.add('show');
+                
+            } catch (error) {
+                alert('生成失败: ' + error.message);
+            }
+        }
+        
+        // 复制激活码
+        async function copyCode() {
+            const activationCode = document.getElementById('activationCode').textContent;
+            
+            if (activationCode === '等待生成...') {
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(activationCode);
+                showToast();
+            } catch (error) {
+                // 降级方案
+                const textArea = document.createElement('textarea');
+                textArea.value = activationCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast();
+            }
+        }
+        
+        // 显示复制成功提示
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+        
+        // 回车键生成
+        document.getElementById('machineCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateCode();
+            }
+        });
+    </script>
+</body>
+</html>
+
